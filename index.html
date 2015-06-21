@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hexagonator</title>
+
+    <meta name="author" content="http://www.josetomastocino.com">
+    <meta name="description" content="Generate minimalist, abstract wallpapers made out of hexagons!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Hexagonator!</h1>
+    <p class="credits">
+        Built by <a href="http://josetomastocino.com">JoséTomásTocino</a>
+    </p>
+
+    <p class="example">
+        <img src="orig.jpg" alt="">
+        ⇒
+        <img src="pix.png" alt="">
+    </p>
+
+    <p class="description">
+        <strong>Hexagonator</strong> generates abstract wallpapers made out of
+        hexagons based on the image you choose. Fill your minimalism needs with
+        this powerful, cutting-edge web application that surprisingly does <strong>not</strong>
+        use React, jQuery, NodeJS or Gulp!
+    </p>
+
+    <p class="description">
+        Select the hexagon size, the softness
+        of the color transitions and the input file, and click <strong>generate</strong>.
+    </p>
+
+    <div class="form-field">
+        <label for="input_size">Hexagon size:</label>
+        <input type="number" name="input_size" id="input_size" min="2" max="300" value="25">
+    </div>
+
+    <div class="form-field">
+        <label for="input_transition">Transition softening:</label>
+        <input type="number" name="input_transition" id="input_transition" min="0" max="20" value="2">
+    </div>
+
+    <div class="form-field">
+        <label for="input_file">Original image:</label>
+        <input type="file" name="input_file" id="input_file" accept="image/*">
+    </div>
+
+    <div class="form-field">
+        <button id="btnGenerate">Generate!</button>
+    </div>
+
+    <p class="description download-instructions">
+        To <strong>download</strong> the wallpaper, right click on it and select
+        <em>Save image as</em>. <br>Image size: <span class="wallpaper-size"></span>
+    </p>
+
+
+    <canvas id="doc_canvas" width="1000"></canvas>
+</div>
+
+
+<script src="script.js"></script>
+</body>
+</html>
