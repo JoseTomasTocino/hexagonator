@@ -84,23 +84,15 @@
         var avg = [Math.floor(reds / realPixelCount), Math.floor(greens / realPixelCount), Math.floor(blues / realPixelCount)];
 
         // Generate the hexadecimal code of the color
-        var hex = "#" + avg.map(function(f) { return f.toString(16);}).join("");
-
-        // console.log(hex);
-
-        // if(hex == "#000") {
-        //     console.log("BITCH BITCH BITCH");
-        // }
+        var hex = "#" + avg.map(function(f) { return (f+0x100).toString(16).substr(-2).toUpperCase();}).join("");
 
         return hex;
     };
 
     /**
      * @brief Does the big thingy
-     * @details [long description]
      *
      * @param  e The event
-     * @return [description]
      */
     var imageLoadedCallback = function(e)
     {
@@ -143,38 +135,41 @@
         var averageVerticalRadius = softening * hexHalfHeight;
 
         // Calculate the number of hexagons to draw
-        var hexCols = Math.ceil(img.width / (hexWidth + size));
-        var hexRows = Math.ceil(img.height / hexHalfHeight) + 1;
+        var gridWidth = Math.ceil(img.width / (hexWidth + size)) + 1;
+        var gridHeight = Math.ceil(img.height / hexHalfHeight) + 1;
 
         console.group("Info");
         console.log("Image size: %i x %i", img.width, img.height);
         console.log("Hexagon size: %f", size);
         console.log("Hexagon width: %f", hexWidth);
         console.log("Hexagon height: %f", hexHeight);
-        console.log("Rows: %i", hexRows);
-        console.log("Cols: %i", hexCols);
-        console.log("Total hexagons: %i", hexCols * hexRows);
+        console.log("Grid width : %i", gridWidth);
+        console.log("Grid height: %i", gridHeight);
+        console.log("Total hexagons: %i", gridWidth * gridHeight);
 
         console.groupEnd();
 
         // For each hexagon to draw
-        for (var cuRow = 0; cuRow < hexRows; ++cuRow)
-        {
-            // console.log("%cROW %i", "color:blue; font-size: large", cuRow);
 
-            for (var cuCol = 0; cuCol < hexCols; ++cuCol)
+        for (var gridY = 0; gridY < gridHeight; ++gridY)
+        {
+            for (var gridX = 0; gridX < gridWidth; ++gridX)
             {
                 // Compute the position of the hexagon (center)
                 // Hexagons in uneven rows are offset 1.5 * size
-                var hexX = cuCol * horizontalSeparation + Math.floor((cuRow % 2) * 1.5 * size);
-                var hexY = cuRow * verticalSeparation;
+                var hexX = gridX * horizontalSeparation + Math.floor((gridY % 2) * 1.5 * size);
+                var hexY = gridY * verticalSeparation;
 
-                // console.log("Row %i, Col %i, X %i, Y %i", cuRow, cuCol, hexX, hexY);
+                // console.log("Row %i, Col %i, X %i, Y %i", gridY, gridX, hexX, hexY);
 
                 // Make sure we don't pick unexisting pixels to make the average
                 // in the hexagons close to the borders
                 var piece_x = Math.max(0, hexX - averageHorizontalRadius),
                     piece_y = Math.max(0, hexY - averageVerticalRadius);
+
+                // Don't paint hexagons out of place
+                if (piece_x > canvas.width || piece_y > canvas.height)
+                    continue;
 
                 if (piece_x + averageHorizontalRadius * 2 > canvas.width)
                 {
@@ -214,7 +209,6 @@
                         size,
                         color);
 
-                    outcontext.fillRect(hexX, hexY, 2, 2);
                 }
                 catch (err)
                 {
